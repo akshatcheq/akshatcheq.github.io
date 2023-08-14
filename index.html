@@ -40,40 +40,29 @@
       Please continue with the webview flow with <span id="applicationIdPlaceholder"></span>
     </div>
     <div id="buttons">
-      <button class="button success" onclick="sendStatus('SUCCESS')">SUCCESS</button>
-      <button class="button failure" onclick="sendStatus('FAILURE')">FAILURE</button>
+      <form action="http://localhost/apis/lending/kyc/callback" method="POST" id="statusForm">
+        <input type="hidden" name="application_id" id="applicationIdInput">
+        <input type="hidden" name="cheq_user_id" id="userIdInput">
+        <input type="hidden" name="status" id="statusInput">
+        <button class="button success" type="button" onclick="submitForm('SUCCESS')">SUCCESS</button>
+        <button class="button failure" type="button" onclick="submitForm('FAILURE')">FAILURE</button>
+      </form>
     </div>
   </div>
 
   <script>
     const queryParams = new URLSearchParams(window.location.search);
-    const userId = queryParams.get('userId');
-    const applicationId = queryParams.get('applicationId');
+    const userId = queryParams.get('cheq_user_id');
+    const applicationId = queryParams.get('application_id');
 
     document.getElementById('applicationIdPlaceholder').textContent = applicationId;
+    document.getElementById('applicationIdInput').value = applicationId;
+    document.getElementById('userIdInput').value = userId;
 
-    function sendStatus(status) {
-  const postData = {
-    applicationId: applicationId,
-    status: status
-  };
-
-  fetch('/apis/lending/kyc/callback', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(postData)
-  }).then(response => {
-    // Handle response as needed
-    console.log(`Status ${status} sent successfully`);
-    
-    // Redirect to YOUR_POST_URL after sending the status
-    window.location.href = 'https://uat.cheq.one/apis/lending/kyc/callback';
-  }).catch(error => {
-    console.error('Error sending status:', error);
-  });
-}
+    function submitForm(status) {
+      document.getElementById('statusInput').value = status;
+      document.getElementById('statusForm').submit();
+    }
   </script>
 </body>
 </html>
