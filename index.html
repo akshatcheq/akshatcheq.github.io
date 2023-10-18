@@ -29,7 +29,7 @@
     color: white;
   }
   .failure {
-    background-color: #FF5733;
+    background-color: #4CAF50;
     color: white;
   }
 </style>
@@ -40,8 +40,8 @@
       Please continue with the webview flow with <span id="applicationIdPlaceholder"></span>
     </div>
     <div id="buttons">
-      <button class="button success" onclick="sendStatus('SUCCESS')">SUCCESS</button>
-      <button class="button failure" onclick="sendStatus('FAILURE')">FAILURE</button>
+      <button class="button success" onclick="sendStatus('SUCCESS')">LOCALHOST</button>
+      <button class="button failure" onclick="sendStatus('FAILURE')">UATWEBAPP</button>
     </div>
   </div>
 
@@ -53,27 +53,27 @@
     document.getElementById('applicationIdPlaceholder').textContent = applicationId;
 
     function sendStatus(status) {
-  const postData = {
-    applicationId: applicationId,
-    status: status
-  };
-
-  fetch('/apis/lending/kyc/callback', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(postData)
-  }).then(response => {
-    // Handle response as needed
-    console.log(`Status ${status} sent successfully`);
+      const postData = {
+        applicationId: applicationId,
+        status: status
+      };
     
-    // Redirect to YOUR_POST_URL after sending the status
-    window.location.href = 'https://uatwebapp.cheqfin.one/KYC-process';
-  }).catch(error => {
-    console.error('Error sending status:', error);
-  });
-}
+      fetch('/apis/lending/kyc/callback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(postData)
+      }).then(response => {
+        // Handle response as needed
+        console.log(`Status ${status} sent successfully`);
+        
+        // Redirect to YOUR_POST_URL after sending the status
+        window.location.href = (status == 'SUCCESS') ? 'http://localhost:3000/KYC-process' : 'https://uatwebapp.cheqfin.one/KYC-process';
+      }).catch(error => {
+        console.error('Error sending status:', error);
+      });
+  }
   </script>
 </body>
 </html>
